@@ -1,14 +1,14 @@
 import { View, Text, TouchableOpacity, ImageBackground } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
-import bg from '../../assets/images/bg_login.jpg'
 import SizedBoxItem from '../components/sizedBoxItem'
 import { COLOR } from '../../constants'
 import InputItem from '../components/inputItem'
 
 export default function RegisterScreen({ navigation }: any) {
+    const bg = 'https://res.cloudinary.com/clock/image/upload/v1702390952/TPlant/ugbt6yz73siptqbpdhey.webp'
     return (
-        <ImageBackground source={bg} resizeMode="cover" style={tw`w-full h-full flex justify-end`}>
+        <ImageBackground source={{ uri: bg }} resizeMode="cover" style={tw`w-full h-full flex justify-end`}>
             <View style={tw`px-4 py-16`}>
                 <View>
                     <Text style={tw`text-3xl text-[${COLOR.ACCENT_COLOR}]`}>Hello</Text>

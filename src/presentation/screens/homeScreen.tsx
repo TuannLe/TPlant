@@ -5,7 +5,6 @@ import AntDesign from 'react-native-vector-icons/AntDesign'
 import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
-import image from '../../assets/images/farm1.jpeg'
 import WeatherToday from '../components/home/weatherToday'
 import { COLOR } from '../../constants'
 import SizedBoxItem from '../components/sizedBoxItem'
@@ -15,12 +14,13 @@ import { TabActions, useNavigation } from '@react-navigation/native'
 export default function HomeScreen() {
     const navigation = useNavigation()
     const jumpToAction = TabActions.jumpTo('ScanTab');
+    const image = 'https://res.cloudinary.com/clock/image/upload/v1702390952/TPlant/txsb7vzg6u6kqyqvll4p.jpg'
     return (
         <ScrollView>
             <View>
                 <View>
                     <Image
-                        source={image}
+                        source={{ uri: image }}
                         style={tw`w-full h-50`}
                         resizeMode={'cover'}
                     />

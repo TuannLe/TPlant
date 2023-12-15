@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const AXIOS = axios.create({
-    baseURL: 'http://api.nguyentaimarine.com',
+    baseURL: 'http://localhost:3000',
     timeout: 100000,
     headers: { 'Content-Type': 'application/json' }
 })
