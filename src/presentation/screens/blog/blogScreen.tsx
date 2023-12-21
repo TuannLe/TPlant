@@ -1,15 +1,23 @@
-import { View, FlatList, Text, Platform, ScrollView, TextInput, TouchableOpacity } from 'react-native'
-import React, { useState } from 'react'
+import { View, FlatList, Text, TextInput, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import Octicons from 'react-native-vector-icons/Octicons'
+import { useDispatch } from 'react-redux'
+import * as ACTIONS from '../../../core/redux/actions/blogAction'
 import BlogItem from '../../components/blog/blogItem'
 import { COLOR } from '../../../constants'
 import CategoryItem from '../../components/blog/categoryItem'
 import SizedBoxItem from '../../components/sizedBoxItem'
 
 export default function BlogScreen() {
+    const dispatch = useDispatch()
     const [searchKey, setSearchKey] = useState('')
     const [selectedIndex, setSelectedIndex] = useState(0)
+
+    useEffect(() => {
+        console.log('hello')
+        dispatch(ACTIONS.GetALlBlogsStart())
+    }, [])
     const data = [
         {
             image: 'https://cdnphoto.dantri.com.vn/fVMVyko7qiP6wWrJB3yVHD9ztfM=/zoom/1200_630/2022/01/04/comocombatirelminadordeloscitricos3054orig-crop-1641279526069.jpeg',
