@@ -1,20 +1,29 @@
 import { View, Text, Image, TouchableOpacity, ScrollView } from 'react-native'
-import React from 'react'
+import React, { useEffect } from 'react'
 import tw from 'twrnc'
 import AntDesign from 'react-native-vector-icons/AntDesign'
 import Entypo from 'react-native-vector-icons/Entypo'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons'
+import { TabActions, useNavigation } from '@react-navigation/native'
+import { useDispatch, useSelector } from 'react-redux'
+import { GetALlBlogsStart } from '../../core/redux/actions/blogAction'
 import WeatherToday from '../components/home/weatherToday'
 import { COLOR } from '../../constants'
 import SizedBoxItem from '../components/sizedBoxItem'
 import BlogPopular from '../components/home/blogPopular'
-import { TabActions, useNavigation } from '@react-navigation/native'
 
 export default function HomeScreen() {
     const navigation = useNavigation()
+    const dispatch = useDispatch()
     const jumpToAction = TabActions.jumpTo('ScanTab');
     const image = 'https://res.cloudinary.com/clock/image/upload/v1702390952/TPlant/txsb7vzg6u6kqyqvll4p.jpg'
+    const token = useSelector((state: any) => state.user.token)
+
+    useEffect(() => {
+        dispatch(GetALlBlogsStart(token))
+    }, [token])
+
     return (
         <ScrollView>
             <View>

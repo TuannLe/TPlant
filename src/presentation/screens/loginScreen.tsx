@@ -7,6 +7,7 @@ import * as ACTIONS from '../../core/redux/actions/userAction'
 import { COLOR } from '../../constants'
 import InputItem from '../components/inputItem'
 import SizedBoxItem from '../components/sizedBoxItem'
+import { login } from '../../core/apis/userApi'
 
 export default function LoginScreen() {
     const navigation = useNavigation();
@@ -14,14 +15,25 @@ export default function LoginScreen() {
     const bg = 'https://res.cloudinary.com/clock/image/upload/v1702390952/TPlant/ugbt6yz73siptqbpdhey.webp'
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [warn, setWarn] = useState('')
 
-    const handleLogin = () => {
+    const handleLogin = async () => {
         if (email != '' && password != '') {
-            dispatch(ACTIONS.LoginStart({ email, password }))
+            setWarn('')
+            const res: any = await login({ email, password })
+            if (res.status == '200') {
+                if (res.data == 'Login fail') {
+                    setWarn('Email or password incorrect')
+                } else {
+                    dispatch(ACTIONS.LoginSuccess(res.data))
+                    navigation.goBack()
+                }
+            }
         } else {
-
+            setWarn('Can not be empty*')
         }
     }
+
     return (
         <ImageBackground source={{ uri: bg }} resizeMode="cover" style={tw`w-full h-full flex justify-end`}>
             <View style={tw`px-4 py-16`}>
@@ -35,6 +47,11 @@ export default function LoginScreen() {
                     <SizedBoxItem width='0' height='6' />
                     <InputItem isSecureText={true} placeholder='Enter your password' value={password} setValue={setPassword} />
                     <SizedBoxItem width='0' height='3' />
+                    {
+                        warn ? (
+                            <Text style={tw`text-base text-red-500`}>{warn}</Text>
+                        ) : null
+                    }
                     <View style={tw`flex items-end`}>
                         <TouchableOpacity
                             style={tw`py-1.5`}

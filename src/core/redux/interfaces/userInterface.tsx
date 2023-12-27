@@ -3,8 +3,15 @@ export interface LoginInterface {
     password: string;
 }
 export interface UserInterface {
+    account_id: number;
     email: string;
-    password: string;
+    username: string;
+    address: string | undefined;
+    created_at: Date;
+    otp: number | undefined;
+    role: number | undefined;
+    status: number | undefined;
+    token: string | undefined;
 }
 export interface RegisterInterface {
     email: string;

@@ -6,6 +6,9 @@ import {
     RegisterScreen,
     BlogDetailScreen,
     DiseaseDetailScreen,
+    AddBlogScreen,
+    MyBlogScreen,
+    MyFavoriteBlogScreen
 } from '../screens'
 import { RootStackPramList } from './interface'
 
@@ -38,6 +41,21 @@ export default function RootNavigator() {
             <Stack.Screen
                 name="BlogDetailScreen"
                 component={BlogDetailScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="AddBlogScreen"
+                component={AddBlogScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="MyBlogScreen"
+                component={MyBlogScreen}
+                options={{ headerShown: false }}
+            />
+            <Stack.Screen
+                name="MyFavoriteBlogScreen"
+                component={MyFavoriteBlogScreen}
                 options={{ headerShown: false }}
             />
             <Stack.Screen

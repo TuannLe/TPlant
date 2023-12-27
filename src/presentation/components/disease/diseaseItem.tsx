@@ -10,7 +10,7 @@ export default function DiseaseItem({ item }: any) {
     return (
         <TouchableOpacity
             onPress={() => navigation.navigate('DiseaseDetailScreen', { item: item })}
-            style={tw`flex flex-row items-center bg-white shadow-md`}
+            style={tw`flex flex-row items-center bg-white shadow-md rounded-lg overflow-hidden`}
         >
             <Image source={{ uri: item.image }} style={tw`w-20 h-20`} />
             <View style={tw`flex-1 px-4`}>

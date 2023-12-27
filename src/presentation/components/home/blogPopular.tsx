@@ -5,33 +5,18 @@ import { COLOR } from '../../../constants'
 import BlogPopularItem from './blogPopularItem'
 import SizedBoxItem from '../sizedBoxItem'
 import { TabActions, useNavigation } from '@react-navigation/native'
+import { useSelector } from 'react-redux'
+import { BlogInterface } from '../../../core/redux/interfaces/blogInterface'
 
 export default function BlogPopular() {
     const navigation = useNavigation()
     const jumpToAction = TabActions.jumpTo('BlogTab');
+    const blogs = useSelector((state: any) => state.blog.blogs)
 
-    const data = [
-        {
-            image: 'https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D',
-            author_avt: 'https://pe-images.s3.amazonaws.com/basics/cc/image-size-resolution/resize-images-for-print/image-cropped-8x10.jpg',
-            author_name: 'tuanle',
-            date: '20-10-2023',
-            title: 'hello tile',
-            description: 'description',
-        },
-        {
-            image: 'https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D',
-            author_avt: 'https://pe-images.s3.amazonaws.com/basics/cc/image-size-resolution/resize-images-for-print/image-cropped-8x10.jpg',
-            author_name: 'tuanle',
-            date: '20-10-2023',
-            title: 'hello tile2',
-            description: 'description',
-        },
-    ]
     return (
         <View style={tw`px-4`}>
             <View style={tw`flex flex-row items-center justify-between`}>
-                <Text style={tw`text-xl text-[${COLOR.TEXT_BLACK}] font-medium`}>Popular</Text>
+                <Text style={tw`text-xl text-[${COLOR.TEXT_BLACK}] font-medium`}>Blogs</Text>
                 <TouchableOpacity
                     onPress={() => navigation.dispatch(jumpToAction)}
                     style={tw`pl-4`}
@@ -42,32 +27,17 @@ export default function BlogPopular() {
             <SizedBoxItem width='0' height='4' />
             <View>
                 {
-                    data.length ? (
-                        data.map((item, index) => {
+                    blogs?.length ? (
+                        blogs.slice(0, 2).map((item: BlogInterface, index: any) => {
                             return (
-                                <BlogPopularItem key={index} item={item} />
+                                <View key={item.article_id}>
+                                    <BlogPopularItem item={item} />
+                                    <SizedBoxItem width='0' height='4' />
+                                </View>
                             )
                         })
                     ) : null
                 }
-                {/* {
-                    data.length ? (
-                        <FlatList
-                            ItemSeparatorComponent={
-                                () => (
-                                    <View
-                                        style={tw`w-4`}
-                                    />
-                                )
-                            }
-                            data={data}
-                            renderItem={(item: any) => <BlogPopularItem item={item.item} />}
-                            showsHorizontalScrollIndicator={false}
-                            showsVerticalScrollIndicator={false}
-                            keyExtractor={item => item.title}
-                        />
-                    ) : null
-                } */}
             </View>
         </View>
     )

@@ -9,7 +9,6 @@ export const login = async (payload: LoginInterface) => {
                 "Content-Type": "application/json"
             }
         })
-        console.log(res)
         return res
     } catch (error) {
         return error

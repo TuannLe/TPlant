@@ -1,4 +1,4 @@
-import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Image } from 'react-native'
+import { View, Text, StyleSheet, ActivityIndicator, TouchableOpacity, Image, Platform } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import tw from 'twrnc'
 import FontAwesome6 from 'react-native-vector-icons/FontAwesome6'
@@ -8,11 +8,13 @@ import { Camera, CameraCaptureError, useCameraDevice } from 'react-native-vision
 import { launchImageLibrary } from 'react-native-image-picker'
 import SizedBoxItem from '../components/sizedBoxItem'
 import { COLOR } from '../../constants'
+import { useNavigation } from '@react-navigation/native'
 
 export default function ScanScreen() {
     const device = useCameraDevice('back')
     const camera = useRef<Camera>(null)
-    const [image, setImage] = useState('')
+    const navigation = useNavigation()
+    const [image, setImage] = useState<Object>()
     const [loading, setLoading] = useState(false)
 
     const checkPermission = async () => {
@@ -30,6 +32,7 @@ export default function ScanScreen() {
                 flash: 'off',
                 enableShutterSound: false
             })
+            console.log(photo)
             setLoading(false)
             setImage(photo.path)
         }
@@ -47,22 +50,24 @@ export default function ScanScreen() {
             } else if (response.error) {
                 console.log('Image picker error: ', response.error);
             } else {
-                let imageUri = response.uri || response.assets?.[0]?.uri;
-                setImage(imageUri);
+                const result = response.assets[0]
+                const _image = {
+                    uri: Platform.OS == 'ios' ? result.uri.substr(7) : result.uri,
+                    name: result.fileName || result.uri.substr(result.uri.lastIndexOf('/') + 1),
+                    type: result.type,
+                }
+                setImage(_image)
             }
         })
     }
 
-    useEffect(() => {
-        console.log(loading)
-    }, [loading])
     if (device == null) return <ActivityIndicator />
     return (
         <View style={tw`w-full h-full flex`}>
             {
                 image ?
                     <>
-                        <Image source={{ uri: 'file://' + image }} style={tw`w-full flex-1`} />
+                        <Image source={{ uri: image.uri }} style={tw`w-full flex-1`} />
                         <View style={tw`h-[100px] bg-black px-4 flex flex-row justify-around items-center`}>
                             <TouchableOpacity
                                 onPress={() => setImage('')}
@@ -71,7 +76,7 @@ export default function ScanScreen() {
                                 <Ionicons name='close-outline' style={tw`text-5xl text-white`} />
                             </TouchableOpacity>
                             <TouchableOpacity
-                                onPress={() => { }}
+                                onPress={() => navigation.navigate('AddBlogScreen', { image: image })}
                             >
                                 <Ionicons name='checkmark-circle-outline' style={tw`text-7xl text-white`} />
                             </TouchableOpacity>

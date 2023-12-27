@@ -1,82 +1,72 @@
-import { View, FlatList, Text, TextInput, TouchableOpacity } from 'react-native'
+import { View, FlatList, Text, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import tw from 'twrnc'
 import Octicons from 'react-native-vector-icons/Octicons'
-import { useDispatch } from 'react-redux'
-import * as ACTIONS from '../../../core/redux/actions/blogAction'
+import { useSelector } from 'react-redux'
 import BlogItem from '../../components/blog/blogItem'
 import { COLOR } from '../../../constants'
-import CategoryItem from '../../components/blog/categoryItem'
 import SizedBoxItem from '../../components/sizedBoxItem'
+import { getBlogsPopular } from '../../../core/apis/blogApi'
 
 export default function BlogScreen() {
-    const dispatch = useDispatch()
     const [searchKey, setSearchKey] = useState('')
     const [selectedIndex, setSelectedIndex] = useState(0)
-
-    useEffect(() => {
-        console.log('hello')
-        dispatch(ACTIONS.GetALlBlogsStart())
-    }, [])
-    const data = [
-        {
-            image: 'https://cdnphoto.dantri.com.vn/fVMVyko7qiP6wWrJB3yVHD9ztfM=/zoom/1200_630/2022/01/04/comocombatirelminadordeloscitricos3054orig-crop-1641279526069.jpeg',
-            author_avt: 'https://pe-images.s3.amazonaws.com/basics/cc/image-size-resolution/resize-images-for-print/image-cropped-8x10.jpg',
-            author_name: 'tuanle',
-            date: '20-10-2023',
-            title: 'Citrus leaf miner',
-            description: 'Leaf deformation - twisted or curled appearance',
-        },
-        {
-            image: 'https://nongnghiepthuanthien.vn/wp-content/uploads/2020/09/benh-kham-do-vi-rus-min.jpg',
-            author_avt: 'https://pe-images.s3.amazonaws.com/basics/cc/image-size-resolution/resize-images-for-print/image-cropped-8x10.jpg',
-            author_name: 'tuanle',
-            date: '20-10-2023',
-            title: 'hello tile',
-            description: 'description',
-        },
-        {
-            image: 'https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D',
-            author_avt: 'https://pe-images.s3.amazonaws.com/basics/cc/image-size-resolution/resize-images-for-print/image-cropped-8x10.jpg',
-            author_name: 'tuanle',
-            date: '20-10-2023',
-            title: 'hello tile',
-            description: 'description',
-        },
-        {
-            image: 'https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D',
-            author_avt: 'https://pe-images.s3.amazonaws.com/basics/cc/image-size-resolution/resize-images-for-print/image-cropped-8x10.jpg',
-            author_name: 'tuanle',
-            date: '20-10-2023',
-            title: 'hello tile',
-            description: 'description',
-        },
-        {
-            image: 'https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D',
-            author_avt: 'https://pe-images.s3.amazonaws.com/basics/cc/image-size-resolution/resize-images-for-print/image-cropped-8x10.jpg',
-            author_name: 'tuanle',
-            date: '20-10-2023',
-            title: 'hello tile',
-            description: 'description',
-        },
-        {
-            image: 'https://images.unsplash.com/photo-1575936123452-b67c3203c357?q=80&w=1000&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8aW1hZ2V8ZW58MHx8MHx8fDA%3D',
-            author_avt: 'https://pe-images.s3.amazonaws.com/basics/cc/image-size-resolution/resize-images-for-print/image-cropped-8x10.jpg',
-            author_name: 'tuanle',
-            date: '20-10-2023',
-            title: 'hello tile',
-            description: 'description',
-        },
-
-    ]
+    const [loading, setLoading] = useState(false)
     const categories = [
         'All',
         'New',
         'Popular',
         'Save',
     ]
+    const token = useSelector((state: any) => state.user.token)
+    const blogs = useSelector((state: any) => state.blog.blogs)
+    const blogsFavorite = useSelector((state: any) => state.blog.blogsFavorite)
+    const [tempBlogs, setTempBlogs] = useState([])
+
+    useEffect(() => {
+        setTempBlogs(blogs)
+    }, [blogs])
+
+    const handleGetBlogsPopular = async () => {
+        setLoading(true)
+        const res: any = await getBlogsPopular(token)
+        if (res.status == '200') {
+            setLoading(false)
+            if (res.data?.length) {
+                setTempBlogs(res.data)
+            }
+        }
+    }
+
+    const handleFilter = (item: any) => {
+        switch (item) {
+            case 'All':
+                setTempBlogs(blogs)
+                break;
+            case 'Popular':
+                handleGetBlogsPopular()
+                break;
+            case 'New':
+                setLoading(true)
+                setTimeout(() => {
+                    setLoading(false)
+                    setTempBlogs(blogs?.slice(0, 2))
+                }, 500);
+                break;
+            case 'Save':
+                setLoading(true)
+                setTimeout(() => {
+                    setLoading(false)
+                    setTempBlogs(blogsFavorite)
+                }, 500);
+                break;
+            default:
+
+        }
+    }
+
     return (
-        <View>
+        <View style={tw`w-full h-full flex flex-col`}>
             <View style={tw`p-4`}>
                 <View style={tw`border border-gray-300 rounded flex flex-row items-center`}>
                     <TextInput
@@ -91,29 +81,15 @@ export default function BlogScreen() {
                     <Octicons name='search' style={tw`text-xl px-4 text-gray-400`} />
                 </View>
                 <SizedBoxItem width='0' height='4' />
-                {/* <View style={tw`px-4`}>
-                <FlatList
-                    ItemSeparatorComponent={
-                        () => (
-                            <View
-                                style={tw`w-4`}
-                            />
-                        )
-                    }
-                    data={categories}
-                    renderItem={(item: any) => <CategoryItem item={item.item} />}
-                    showsHorizontalScrollIndicator={false}
-                    showsVerticalScrollIndicator={false}
-                    horizontal={true}
-                    keyExtractor={item => item}
-                />
-            </View> */}
                 <View style={tw`flex flex-row bg-white rounded-xl`}>
                     {
                         categories.map((item, index) => {
                             return (
                                 <TouchableOpacity
-                                    onPress={() => setSelectedIndex(index)}
+                                    onPress={() => {
+                                        handleFilter(item)
+                                        setSelectedIndex(index)
+                                    }}
                                     key={index}
                                     style={tw`flex-1 ${selectedIndex == index ? `bg-[${COLOR.ACCENT_COLOR}]` : ''} rounded-xl py-2`}
                                 >
@@ -124,21 +100,30 @@ export default function BlogScreen() {
                     }
                 </View>
             </View>
-            <FlatList
-                ItemSeparatorComponent={
-                    () => (
-                        <SizedBoxItem width='0' height='4' />
-                    )
-                }
-                data={data}
-                renderItem={(item: any) => <BlogItem item={item.item} />}
-                showsHorizontalScrollIndicator={false}
-                showsVerticalScrollIndicator={false}
-                ListFooterComponent={() => (
-                    <SizedBoxItem width='0' height='38' />
-                )}
-            // keyExtractor={item => item.name}
-            />
+            {
+                loading ? (
+                    <View style={tw`flex-1 items-center justify-center`}>
+                        <ActivityIndicator size="small" color="#067a50" />
+                    </View>
+                ) :
+                    tempBlogs ? (
+                        <FlatList
+                            ItemSeparatorComponent={
+                                () => (
+                                    <SizedBoxItem width='0' height='4' />
+                                )
+                            }
+                            data={tempBlogs}
+                            renderItem={(item: any) => <BlogItem item={item.item} />}
+                            showsHorizontalScrollIndicator={false}
+                            showsVerticalScrollIndicator={false}
+                            ListFooterComponent={() => (
+                                <SizedBoxItem width='0' height='4' />
+                            )}
+                            keyExtractor={(item: any) => item.article_id}
+                        />
+                    ) : null
+            }
         </View>
     )
 }

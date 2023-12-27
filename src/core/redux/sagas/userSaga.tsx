@@ -6,7 +6,6 @@ import * as TYPES from '../constants/userConstant'
 function* loginSaga(action: any) {
     try {
         const res: ResponseGenerator = yield call(APIS.login, action.payload)
-        console.log(res)
         if (res.status == 200) {
             yield put(actions.LoginSuccess(res.data))
         }

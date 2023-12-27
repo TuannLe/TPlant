@@ -22,10 +22,9 @@ export default function authReducers(state = initState, action: ActionModel) {
     switch (action.type) {
         // login
         case TYPES.LOG_IN_SUCCESS:
-            console.log(action.payload)
             return {
                 ...state,
-                currentUser: action.payload.data,
+                currentUser: action.payload,
                 token: action.payload.token,
             }
         // register

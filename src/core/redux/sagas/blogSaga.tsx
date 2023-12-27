@@ -3,9 +3,9 @@ import * as actions from '../actions/blogAction'
 import * as APIS from '../../apis/blogApi'
 import * as TYPES from '../constants/blogConstant'
 
-function* getAllBlogs() {
+function* getAllBlogs(action: any) {
     try {
-        const res: ResponseGenerator = yield call(APIS.getAllBlogs)
+        const res: ResponseGenerator = yield call(APIS.getAllBlogs, action.payload)
         if (res.status == 200) {
             yield put(actions.GetALlBlogsSuccess(res.data))
         }

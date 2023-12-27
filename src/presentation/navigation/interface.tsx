@@ -15,6 +15,9 @@ export type RootStackPramList = {
     LoginScreen: undefined;
     RegisterScreen: undefined;
     BlogDetailScreen: undefined;
+    MyBlogScreen: undefined;
+    MyFavoriteBlogScreen: undefined;
+    AddBlogScreen: undefined;
     DiseaseDetailScreen: undefined;
 }
 

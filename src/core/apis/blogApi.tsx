@@ -3,15 +3,29 @@ import AXIOS from './index'
 
 const url = '/blogs'
 
-export const getAllBlogs = async () => {
-    console.log('hahaha')
+
+export const createBlog = async (token: string, payload: any) => {
+    try {
+        const res = await AXIOS.post(`${url}/create`, payload, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+                'token': `Bearer ${token}`
+            }
+        })
+        return res
+    } catch (error) {
+        return error
+    }
+}
+
+export const getAllBlogs = async (payload: any) => {
     try {
         const res = await AXIOS.get(`${url}/get-all`, {
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'token': `Bearer ${payload}`
             }
         })
-        console.log('heheh', res)
         return res
     } catch (error) {
         return error
@@ -31,11 +45,12 @@ export const getDetailById = async (payload: number) => {
     }
 }
 
-export const getBlogsPopular = async () => {
+export const getBlogsPopular = async (token: string) => {
     try {
         const res = await AXIOS.get(`${url}/get-popular`, {
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'token': `Bearer ${token}`
             }
         })
         return res
@@ -44,11 +59,12 @@ export const getBlogsPopular = async () => {
     }
 }
 
-export const deleteBlog = async (payload: number) => {
+export const deleteBlog = async ({ token, payload }: any) => {
     try {
         const res = await AXIOS.delete(`${url}/delete/${payload}`, {
             headers: {
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                'token': `Bearer ${token}`
             }
         })
         return res
